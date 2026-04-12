@@ -28,6 +28,30 @@ const issueSchema = new mongoose.Schema(
       enum: ["Garbage", "Road", "Lighting", "Water", "Drainage", "Other"],
       default: "Other"
     },
+    detectedLabel: {
+      type: String,
+      trim: true,
+      default: "unknown"
+    },
+    detectionConfidence: {
+      type: Number,
+      default: 0
+    },
+    topDetections: [
+      {
+        label: { type: String, trim: true },
+        score: { type: Number, default: 0 },
+        bbox: [{ type: Number }]
+      }
+    ],
+    xaiOverlayImageUrl: {
+      type: String,
+      default: ""
+    },
+    xaiEvidence: {
+      type: String,
+      trim: true
+    },
     aiSummary: {
       type: String,
       trim: true

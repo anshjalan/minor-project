@@ -4,6 +4,16 @@ node_modules/
 .env.development.local
 .env.test.local
 .env.production.local
+.matplotlib/
+.ultralytics/
+outputs/
+runs/
+dataset/
+src/
+__pycache__/
+*.pyc
+ml-service.log
+ml-service-error.log
 coverage/
 *.log
 npm-debug.log*

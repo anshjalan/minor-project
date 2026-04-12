@@ -9,7 +9,12 @@ export async function createIssue(req, res) {
   }
 
   const imageUrl = req.file ? `/uploads/${req.file.filename}` : "";
-  const ai = await analyzeIssue({ description, voiceTranscript, imageUrl });
+  const ai = await analyzeIssue({
+    description,
+    voiceTranscript,
+    imageUrl,
+    imagePath: req.file?.path || ""
+  });
 
   const issue = await Issue.create({
     title,
@@ -22,6 +27,11 @@ export async function createIssue(req, res) {
       addressLabel
     },
     category: ai.category,
+    detectedLabel: ai.detectedLabel,
+    detectionConfidence: ai.confidence,
+    topDetections: ai.topDetections,
+    xaiOverlayImageUrl: ai.xaiOverlayImageUrl,
+    xaiEvidence: ai.xaiEvidence,
     aiSummary: ai.summary,
     aiExplanation: ai.explanation,
     priority: ai.priority,

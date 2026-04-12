@@ -116,6 +116,9 @@ export default function DashboardPage() {
                     <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-600">{issue.category}</p>
                     <h2 className="mt-2 text-xl font-semibold text-slate-900">{issue.title || issue.aiSummary}</h2>
                     <p className="mt-2 text-sm text-slate-500">{issue.description}</p>
+                    <p className="mt-3 text-sm font-medium text-slate-700">
+                      Detected issue: {issue.detectedLabel || "unknown"}
+                    </p>
                   </div>
                   <span className="rounded-full bg-slate-100 px-3 py-1 text-sm font-medium text-slate-700">
                     {issue.priority} priority
@@ -130,6 +133,14 @@ export default function DashboardPage() {
                   />
                 ) : null}
 
+                {issue.xaiOverlayImageUrl ? (
+                  <img
+                    src={getAssetUrl(issue.xaiOverlayImageUrl)}
+                    alt={`${issue.detectedLabel || issue.category} overlay`}
+                    className="mt-4 h-52 w-full rounded-3xl border border-slate-200 object-cover"
+                  />
+                ) : null}
+
                 <div className="mt-5 grid gap-3 text-sm text-slate-600 md:grid-cols-2">
                   <p>
                     <span className="font-semibold text-slate-800">Summary:</span> {issue.aiSummary}
@@ -141,8 +152,16 @@ export default function DashboardPage() {
                     <span className="font-semibold text-slate-800">Explanation:</span> {issue.aiExplanation}
                   </p>
                   <p>
+                    <span className="font-semibold text-slate-800">Confidence:</span>{" "}
+                    {Math.round((issue.detectionConfidence || 0) * 100)}%
+                  </p>
+                  <p>
                     <span className="font-semibold text-slate-800">Location:</span>{" "}
                     {issue.location.addressLabel || `${issue.location.latitude}, ${issue.location.longitude}`}
+                  </p>
+                  <p className="md:col-span-2">
+                    <span className="font-semibold text-slate-800">Visual evidence:</span>{" "}
+                    {issue.xaiEvidence || "Not available"}
                   </p>
                 </div>
 

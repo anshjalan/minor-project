@@ -2,16 +2,11 @@
   "name": "civic-issue-ml-models",
   "version": "1.0.0",
   "private": true,
-  "type": "module",
   "scripts": {
-    "dev": "node --watch src/server.js",
-    "start": "node src/server.js"
-  },
-  "dependencies": {
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
-    "express": "^4.21.2",
-    "openai": "^4.76.0"
+    "dev": "python -m uvicorn app.main:app --reload --app-dir .",
+    "start": "python -m uvicorn app.main:app --host 0.0.0.0 --port 5001 --app-dir .",
+    "train": "python train_yolo.py",
+    "test:inference": "python test_inference.py"
   }
 }
 

@@ -1,0 +1,68 @@
+YOLO + XAI + GenAI Demo Notes
+
+Project goal
+This project improves a civic issue reporting system by replacing simple AI categorization with a dedicated computer vision model that looks at uploaded issue images.
+
+Problem in the earlier version
+- The earlier system mostly depended on OpenAI-style text analysis and rule-based fallback logic.
+- That was useful for a prototype, but it was not a true image-based ML model.
+- It also could not visually justify what part of the image caused the prediction.
+
+What was implemented now
+- A YOLOv8n object detection model was added in the `ml-models` service.
+- The model was trained on a civic-issues dataset from Roboflow.
+- The system now detects issue regions in the uploaded image instead of only reading text.
+- The detected issue label is mapped into the app's broader issue categories.
+
+Why YOLO was chosen
+- The dataset used in this project is an object detection dataset, not a simple image classification dataset.
+- YOLO is a lightweight and practical model for this kind of task.
+- It works well for a student-level learning project because it is easier to train and easier to explain visually.
+
+How the new pipeline works
+1. A user uploads an image while reporting a civic issue.
+2. The backend stores the image.
+3. The backend sends the saved image path to the Python ML service.
+4. The YOLO model detects the issue in the image.
+5. The top detected label is converted into the app's broader category like Road or Garbage.
+6. An annotated overlay image is generated with detection boxes.
+7. The system stores:
+   - detected label
+   - confidence score
+   - mapped category
+   - visual evidence text
+   - XAI overlay image
+8. The admin dashboard shows the result clearly.
+
+Explainability layer
+- The XAI layer is implemented using detection boxes and evidence text.
+- This is simpler and more intuitive than advanced research-heavy methods for this project level.
+- The admin can see which image region the model focused on.
+
+GenAI role
+- GenAI is not used to make the prediction.
+- It is only used to explain the detector output in human-friendly language.
+- If GenAI is unavailable, the system falls back to a safe template-based explanation.
+
+Key benefit
+The project now has a real ML model for image understanding instead of only heuristic or LLM-based categorization.
+
+Training summary
+- Model used: YOLOv8n
+- Dataset source: Roboflow civic issues dataset
+- Training subset used first: around 4000 images
+- Initial training run: 5 epochs on CPU
+
+Current limitation
+- The trained model is an early version, so confidence and accuracy are still moderate.
+- This is acceptable for a learning project and can be improved later by training longer or using more data.
+
+What is strong about this project now
+- Real image-based ML
+- Practical explainability
+- Clean backend integration
+- Admin-friendly output
+- Safe fallback behavior if the ML service is unavailable
+
+One-line project summary
+This project uses a YOLO-based object detection model to identify civic issues from uploaded images, then explains the prediction using visual evidence and a simple GenAI explanation layer for admin review.

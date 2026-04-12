@@ -7,6 +7,11 @@ function localFallback(description) {
     return {
       summary: "Garbage accumulation reported by citizen.",
       category: "Garbage",
+      detectedLabel: "Garbage",
+      confidence: 0,
+      xaiOverlayImageUrl: "",
+      xaiEvidence: "The ML service was unavailable, so a text fallback was used.",
+      topDetections: [],
       priority: "Medium",
       explanation: "Keywords related to garbage and waste suggest this is a sanitation issue."
     };
@@ -16,6 +21,11 @@ function localFallback(description) {
     return {
       summary: "Road maintenance issue reported.",
       category: "Road",
+      detectedLabel: "pothole",
+      confidence: 0,
+      xaiOverlayImageUrl: "",
+      xaiEvidence: "The ML service was unavailable, so a text fallback was used.",
+      topDetections: [],
       priority: "High",
       explanation: "Road and pothole related terms indicate damage affecting commuting safety."
     };
@@ -25,6 +35,11 @@ function localFallback(description) {
     return {
       summary: "Public lighting issue reported.",
       category: "Lighting",
+      detectedLabel: "Damaged_Electric_Poles",
+      confidence: 0,
+      xaiOverlayImageUrl: "",
+      xaiEvidence: "The ML service was unavailable, so a text fallback was used.",
+      topDetections: [],
       priority: "Medium",
       explanation: "Lighting related language suggests a failed or missing public light."
     };
@@ -34,6 +49,11 @@ function localFallback(description) {
     return {
       summary: "Water supply issue reported.",
       category: "Water",
+      detectedLabel: "unknown",
+      confidence: 0,
+      xaiOverlayImageUrl: "",
+      xaiEvidence: "The ML service was unavailable, so a text fallback was used.",
+      topDetections: [],
       priority: "High",
       explanation: "Water and leakage terms suggest disruption or wastage in the water network."
     };
@@ -43,6 +63,11 @@ function localFallback(description) {
     return {
       summary: "Drainage blockage or overflow reported.",
       category: "Drainage",
+      detectedLabel: "unknown",
+      confidence: 0,
+      xaiOverlayImageUrl: "",
+      xaiEvidence: "The ML service was unavailable, so a text fallback was used.",
+      topDetections: [],
       priority: "High",
       explanation: "Drainage and flooding terms indicate possible blockage or overflow risks."
     };
@@ -51,16 +76,22 @@ function localFallback(description) {
   return {
     summary: "General civic issue reported by citizen.",
     category: "Other",
+    detectedLabel: "unknown",
+    confidence: 0,
+    xaiOverlayImageUrl: "",
+    xaiEvidence: "The ML service was unavailable, so a text fallback was used.",
+    topDetections: [],
     priority: "Medium",
     explanation: "The report does not strongly match a specific civic category, so it was grouped as Other."
   };
 }
 
-export async function analyzeIssue({ description, voiceTranscript = "", imageUrl = "" }) {
+export async function analyzeIssue({ description, voiceTranscript = "", imageUrl = "", imagePath = "" }) {
   const payload = {
     description,
     voiceTranscript,
-    imageUrl
+    imageUrl,
+    image_path: imagePath
   };
 
   try {
@@ -77,8 +108,14 @@ export async function analyzeIssue({ description, voiceTranscript = "", imageUrl
     }
 
     const result = await response.json();
+    const confidence = typeof result.confidence === "number" ? result.confidence : 0;
     return {
       ...result,
+      detectedLabel: result.detectedLabel || "unknown",
+      confidence,
+      xaiOverlayImageUrl: result.xaiOverlayImageUrl || "",
+      xaiEvidence: result.xaiEvidence || "",
+      topDetections: result.topDetections || [],
       department: routeDepartment(result.category)
     };
   } catch (_error) {
