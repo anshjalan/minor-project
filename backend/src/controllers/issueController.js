@@ -1,5 +1,14 @@
 import Issue from "../models/Issue.js";
 import { analyzeIssue } from "../services/aiService.js";
+import fetch from "node-fetch";
+
+async function reverseGeocode(lat, lon) {
+  const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`;
+  const res = await fetch(url, { headers: { 'User-Agent': 'CivicIssuesApp/1.0' } });
+  if (!res.ok) return "";
+  const data = await res.json();
+  return data.display_name || "";
+}
 
 export async function createIssue(req, res) {
   const { title, description, voiceTranscript, latitude, longitude, addressLabel } = req.body;
@@ -16,6 +25,15 @@ export async function createIssue(req, res) {
     imagePath: req.file?.path || ""
   });
 
+  let resolvedAddressLabel = addressLabel;
+  if (!resolvedAddressLabel && latitude !== undefined && longitude !== undefined) {
+    try {
+      resolvedAddressLabel = await reverseGeocode(latitude, longitude);
+    } catch (e) {
+      resolvedAddressLabel = "";
+    }
+  }
+
   const issue = await Issue.create({
     title,
     description,
@@ -24,7 +42,7 @@ export async function createIssue(req, res) {
     location: {
       latitude: Number(latitude),
       longitude: Number(longitude),
-      addressLabel
+      addressLabel: resolvedAddressLabel
     },
     category: ai.category,
     detectedLabel: ai.detectedLabel,

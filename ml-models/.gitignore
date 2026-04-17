@@ -20,3 +20,8 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+
+# datasets
+CIVIC ISSUES.v3i.yolov8/
+dataset/
+*.pt
