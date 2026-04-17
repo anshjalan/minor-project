@@ -20,8 +20,8 @@ function localFallback(description) {
   if (text.includes("pothole") || text.includes("road") || text.includes("street")) {
     return {
       summary: "Road maintenance issue reported.",
-      category: "Road",
-      detectedLabel: "pothole",
+      category: "Pothole",
+      detectedLabel: "Pothole",
       confidence: 0,
       xaiOverlayImageUrl: "",
       xaiEvidence: "The ML service was unavailable, so a text fallback was used.",
@@ -31,45 +31,45 @@ function localFallback(description) {
     };
   }
 
-  if (text.includes("light") || text.includes("dark") || text.includes("streetlight")) {
+  if (text.includes("light") || text.includes("dark") || text.includes("pole")) {
     return {
       summary: "Public lighting issue reported.",
-      category: "Lighting",
+      category: "Damaged Electric Poles",
       detectedLabel: "Damaged_Electric_Poles",
       confidence: 0,
       xaiOverlayImageUrl: "",
       xaiEvidence: "The ML service was unavailable, so a text fallback was used.",
       topDetections: [],
+      priority: "High",
+      explanation: "Lighting or pole related language suggests a damaged electrical pole."
+    };
+  }
+
+  if (text.includes("tree") || text.includes("branch") || text.includes("fallen")) {
+    return {
+      summary: "Fallen tree blocking path reported.",
+      category: "Fallen Trees",
+      detectedLabel: "Fallen_Trees",
+      confidence: 0,
+      xaiOverlayImageUrl: "",
+      xaiEvidence: "The ML service was unavailable, so a text fallback was used.",
+      topDetections: [],
       priority: "Medium",
-      explanation: "Lighting related language suggests a failed or missing public light."
+      explanation: "Tree blockage terms indicate an obstruction requiring removal."
     };
   }
-
-  if (text.includes("water") || text.includes("leak") || text.includes("pipe")) {
+  
+  if (text.includes("sign") || text.includes("stop sign") || text.includes("board")) {
     return {
-      summary: "Water supply issue reported.",
-      category: "Water",
-      detectedLabel: "unknown",
+      summary: "Damaged road sign reported.",
+      category: "Damaged Road Signs",
+      detectedLabel: "Damaged_Road_Signs",
       confidence: 0,
       xaiOverlayImageUrl: "",
       xaiEvidence: "The ML service was unavailable, so a text fallback was used.",
       topDetections: [],
-      priority: "High",
-      explanation: "Water and leakage terms suggest disruption or wastage in the water network."
-    };
-  }
-
-  if (text.includes("drain") || text.includes("sewer") || text.includes("flood")) {
-    return {
-      summary: "Drainage blockage or overflow reported.",
-      category: "Drainage",
-      detectedLabel: "unknown",
-      confidence: 0,
-      xaiOverlayImageUrl: "",
-      xaiEvidence: "The ML service was unavailable, so a text fallback was used.",
-      topDetections: [],
-      priority: "High",
-      explanation: "Drainage and flooding terms indicate possible blockage or overflow risks."
+      priority: "Medium",
+      explanation: "Keywords matching sign structures mapped to traffic enforcement."
     };
   }
 

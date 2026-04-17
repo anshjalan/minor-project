@@ -1,5 +1,6 @@
+import { useEffect } from "react";
 import L from "leaflet";
-import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
+import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -8,7 +9,20 @@ L.Icon.Default.mergeOptions({
   shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png"
 });
 
-export default function IssueMap({ issues }) {
+function MapUpdater({ selectedIssueId, issues }) {
+  const map = useMap();
+  useEffect(() => {
+    if (selectedIssueId) {
+      const issue = issues.find(i => i._id === selectedIssueId);
+      if (issue) {
+        map.flyTo([issue.location.latitude, issue.location.longitude], 16, { animate: true });
+      }
+    }
+  }, [selectedIssueId, issues, map]);
+  return null;
+}
+
+export default function IssueMap({ issues, selectedIssueId }) {
   const center = issues.length
     ? [issues[0].location.latitude, issues[0].location.longitude]
     : [20.5937, 78.9629];
@@ -29,6 +43,7 @@ export default function IssueMap({ issues }) {
             </Popup>
           </Marker>
         ))}
+        <MapUpdater selectedIssueId={selectedIssueId} issues={issues} />
       </MapContainer>
     </div>
   );

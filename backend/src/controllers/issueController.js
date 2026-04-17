@@ -62,7 +62,7 @@ export async function createIssue(req, res) {
 }
 
 export async function getIssues(req, res) {
-  const { status, category } = req.query;
+  const { status, category, department } = req.query;
   const filter = {};
 
   if (req.user.role !== "admin") {
@@ -75,6 +75,10 @@ export async function getIssues(req, res) {
 
   if (category) {
     filter.category = category;
+  }
+
+  if (department) {
+    filter.department = department;
   }
 
   const issues = await Issue.find(filter)

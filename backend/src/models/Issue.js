@@ -25,7 +25,7 @@ const issueSchema = new mongoose.Schema(
     },
     category: {
       type: String,
-      enum: ["Garbage", "Road", "Lighting", "Water", "Drainage", "Other"],
+      enum: ["Damaged Concrete Structures", "Damaged Electric Poles", "Damaged Road Signs", "Dead Animal Pollution", "Fallen Trees", "Garbage", "Graffiti", "Pothole", "Road Crack", "Other"],
       default: "Other"
     },
     detectedLabel: {
