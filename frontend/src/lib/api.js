@@ -29,10 +29,11 @@ export const api = {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
     }),
-  fetchIssues: ({ token, status, category }) => {
+  fetchIssues: ({ token, ...params }) => {
     const search = new URLSearchParams();
-    if (status) search.set("status", status);
-    if (category) search.set("category", category);
+    Object.entries(params).forEach(([key, value]) => {
+      if (value) search.set(key, value);
+    });
 
     return request(`/issues?${search.toString()}`, {
       headers: {
